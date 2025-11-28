@@ -10,10 +10,10 @@ export const MacroSummary = ({ totals }: MacroSummaryProps) => {
   const macros = [
     { label: 'Calories', value: totals.calories, unit: 'kcal', color: 'from-purple-100 to-purple-200' },
     { label: 'Protein', value: totals.protein, unit: 'g', color: 'from-secondary-100 to-secondary-200' },
-    { label: 'Carbs', value: totals.carbs, unit: 'g', color: 'from-primary-100 to-primary-200' },
-    { label: 'Net Carbs', value: netCarbs, unit: 'g', color: 'from-blue-100 to-blue-200' },
     { label: 'Fat', value: totals.fat, unit: 'g', color: 'from-accent-100 to-accent-200' },
+    { label: 'Carbs', value: totals.carbs, unit: 'g', color: 'from-primary-100 to-primary-200' },
     { label: 'Fiber', value: totals.fiber, unit: 'g', color: 'from-green-100 to-green-200' },
+    { label: 'Net Carbs', value: netCarbs, unit: 'g', color: 'from-blue-100 to-blue-200' },
   ];
 
   return (
