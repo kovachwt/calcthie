@@ -50,7 +50,7 @@ export const FoodTypeFilter = ({ selectedTypes, onChange }: FoodTypeFilterProps)
   };
 
   const selectedCount = selectedTypes.length;
-  const allSelected = selectedCount === FOOD_TYPES.length;
+  //const allSelected = selectedCount === FOOD_TYPES.length;
 
   return (
     <div className="relative" ref={dropdownRef}>

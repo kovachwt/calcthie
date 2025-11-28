@@ -14,7 +14,7 @@ export const Logo = ({ className = '', size = 'md' }: LogoProps) => {
 
   return (
     <img
-      src="/images/logo.png"
+      src="images/logo.png"
       alt="Calcthie Logo"
       width={dimension}
       height={dimension}

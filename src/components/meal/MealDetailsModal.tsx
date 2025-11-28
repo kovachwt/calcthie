@@ -95,7 +95,7 @@ export const MealDetailsModal = ({
                   </div>
                 </div>
                 <div className="text-right text-gray-700">
-                  {item.nutrients?.calories?.toFixed(0) || 0} cal
+                  
                 </div>
               </div>
             ))}
