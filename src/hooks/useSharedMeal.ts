@@ -8,7 +8,7 @@ import type { FoodDetail } from '../types/food';
  * Hook to handle loading a shared meal from URL parameters
  */
 export function useSharedMeal() {
-  const { loadMeal, clearMeal } = useMealStore();
+  const { clearMeal } = useMealStore();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
