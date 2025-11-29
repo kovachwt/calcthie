@@ -69,7 +69,7 @@ export function generateShareableUrl(items: MealItem[]): string {
 
   const encoded = encodeMealToUrl(items);
   const baseUrl = window.location.origin;
-  return `${baseUrl}/shared-meal?items=${encodeURIComponent(encoded)}`;
+  return `${baseUrl}/?items=${encodeURIComponent(encoded)}`;
 }
 
 /**
