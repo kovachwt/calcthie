@@ -7,14 +7,19 @@ import { MealCart } from './components/meal/MealCart';
 import { MealSummary } from './components/meal/MealSummary';
 import { UserMenu } from './components/auth/UserMenu';
 import { Logo } from './components/ui/Logo';
+import { Spinner } from './components/ui/Spinner';
 import { useMealStore } from './stores/mealStore';
 import { useGoalsStore } from './stores/goalsStore';
 import { useHistoryStore } from './stores/historyStore';
 import { useFavoritesStore } from './stores/favoritesStore';
 import { useAuthStore } from './stores/authStore';
+import { useSharedMeal } from './hooks/useSharedMeal';
 import type { FoodDetail, PortionInfo } from './types/food';
 
 function App() {
+  // Handle shared meal from URL
+  const { isLoading: isLoadingSharedMeal, error: sharedMealError } = useSharedMeal();
+
   // Initialize stores from localStorage
   const { loadFromStorage: loadMeal, syncWithBackend: syncMeal } = useMealStore();
   const { loadFromStorage: loadGoals } = useGoalsStore();
@@ -77,6 +82,18 @@ function App() {
     setEditingItemId(null);
   };
 
+  // Show loading state while shared meal is being loaded
+  if (isLoadingSharedMeal) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <Spinner size="lg" />
+          <p className="mt-4 text-gray-600">Loading shared meal...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -94,6 +111,15 @@ function App() {
           </div>
         </div>
       </header>
+
+      {/* Shared Meal Error Banner */}
+      {sharedMealError && (
+        <div className="bg-red-50 border-b border-red-200">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <p className="text-sm text-red-800">{sharedMealError}</p>
+          </div>
+        </div>
+      )}
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

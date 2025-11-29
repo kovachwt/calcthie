@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { ShoppingCart, Trash2, Save } from 'lucide-react';
+import { ShoppingCart, Trash2, Save, Share2, Check } from 'lucide-react';
 import { Card, CardHeader, CardContent } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { MealItem } from './MealItem';
 import { SaveMealModal } from './SaveMealModal';
 import { useMealStore } from '../../stores/mealStore';
+import { copyMealUrlToClipboard } from '../../utils/mealSharing';
 
 interface MealCartProps {
   onEditItem?: (itemId: string) => void;
@@ -13,6 +14,7 @@ interface MealCartProps {
 export const MealCart = ({ onEditItem }: MealCartProps) => {
   const { items, removeItem, clearMeal } = useMealStore();
   const [showSaveMealModal, setShowSaveMealModal] = useState(false);
+  const [urlCopied, setUrlCopied] = useState(false);
 
   const handleRemove = (id: string) => {
     if (confirm('Remove this item from your meal?')) {
@@ -23,6 +25,14 @@ export const MealCart = ({ onEditItem }: MealCartProps) => {
   const handleClearAll = () => {
     if (confirm('Clear all items from your meal?')) {
       clearMeal();
+    }
+  };
+
+  const handleCopyUrl = async () => {
+    const success = await copyMealUrlToClipboard(items);
+    if (success) {
+      setUrlCopied(true);
+      setTimeout(() => setUrlCopied(false), 2000);
     }
   };
 
@@ -72,8 +82,8 @@ export const MealCart = ({ onEditItem }: MealCartProps) => {
               ))}
             </div>
 
-            {/* Save Meal Button */}
-            <div className="mt-4 pt-4 border-t border-gray-200">
+            {/* Action Buttons */}
+            <div className="mt-4 pt-4 border-t border-gray-200 space-y-2">
               <Button
                 onClick={() => setShowSaveMealModal(true)}
                 className="w-full"
@@ -81,6 +91,23 @@ export const MealCart = ({ onEditItem }: MealCartProps) => {
               >
                 <Save className="w-4 h-4 mr-2" />
                 Add to Food Log
+              </Button>
+              <Button
+                onClick={handleCopyUrl}
+                className="w-full"
+                variant="secondary"
+              >
+                {urlCopied ? (
+                  <>
+                    <Check className="w-4 h-4 mr-2" />
+                    Link Copied!
+                  </>
+                ) : (
+                  <>
+                    <Share2 className="w-4 h-4 mr-2" />
+                    Copy Shareable Link
+                  </>
+                )}
               </Button>
             </div>
           </>
