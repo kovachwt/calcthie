@@ -12,12 +12,16 @@ http://localhost:5173/calcthie/?items=fdcId:portionIndex:quantity,fdcId:portionI
 
 **Example:**
 ```
-http://localhost:5173/calcthie/?items=123456:0:1.5,789012:2:1
+http://localhost:5173/calcthie/?items=123456:-1:150,789012:2:1
 ```
 
 This URL represents:
-- Food with ID `123456`, using portion at index `0`, with quantity `1.5`
-- Food with ID `789012`, using portion at index `2`, with quantity `1`
+- Food with ID `123456`, using custom 1 gram portion (index `-1`), with quantity `150`
+- Food with ID `789012`, using portion at index `2` (from the food's portions array), with quantity `1`
+
+**Special Portion Index Values:**
+- `-1` = Custom 1 gram portion (always available for all foods)
+- `0+` = Index in the food's portions array from the API
 
 ### User Flow
 

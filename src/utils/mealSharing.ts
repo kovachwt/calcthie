@@ -3,17 +3,31 @@ import type { MealItem } from '../types/meal';
 /**
  * Encodes meal items into a compact URL-safe format
  * Format: fdcId:portionIndex:quantity,fdcId:portionIndex:quantity,...
+ * Special case: portionIndex of -1 means custom 1 gram portion
  */
 export function encodeMealToUrl(items: MealItem[]): string {
   const encoded = items
     .map((item) => {
-      // Find the index of the selected portion in the food's portions array
-      const portionIndex = item.food.portions.findIndex(
-        (p) =>
-          p.unit === item.portion.unit &&
-          p.gramWeight === item.portion.gramWeight &&
-          p.amount === item.portion.amount
-      );
+      // Check if this is the custom 1 gram portion
+      const isCustomGramPortion =
+        item.portion.unit === 'g' &&
+        item.portion.gramWeight === 1 &&
+        item.portion.amount === 1;
+
+      let portionIndex: number;
+
+      if (isCustomGramPortion) {
+        // Use -1 to indicate the custom 1 gram portion
+        portionIndex = -1;
+      } else {
+        // Find the index of the selected portion in the food's portions array
+        portionIndex = item.food.portions.findIndex(
+          (p) =>
+            p.unit === item.portion.unit &&
+            p.gramWeight === item.portion.gramWeight &&
+            p.amount === item.portion.amount
+        );
+      }
 
       return `${item.food.fdcId}:${portionIndex}:${item.quantity}`;
     })

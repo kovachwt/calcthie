@@ -47,18 +47,30 @@ export function useSharedMeal() {
           .map((item, index) => {
             const food = foodDetails[index];
 
-            // Validate that the portion index is valid
-            if (
-              item.portionIndex < 0 ||
-              item.portionIndex >= food.portions.length
+            let portion;
+
+            // Check if this is the custom 1 gram portion (portionIndex = -1)
+            if (item.portionIndex === -1) {
+              // Create the custom 1 gram portion
+              portion = {
+                amount: 1,
+                unit: 'g',
+                gramWeight: 1,
+                description: '1 gram',
+                modifier: null,
+              };
+            } else if (
+              item.portionIndex >= 0 &&
+              item.portionIndex < food.portions.length
             ) {
+              // Use the portion from the food's portions array
+              portion = food.portions[item.portionIndex];
+            } else {
               console.warn(
                 `Invalid portion index ${item.portionIndex} for food ${food.fdcId}`
               );
               return null;
             }
-
-            const portion = food.portions[item.portionIndex];
 
             return {
               food,
