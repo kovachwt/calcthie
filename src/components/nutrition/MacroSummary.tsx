@@ -5,7 +5,7 @@ interface MacroSummaryProps {
   isFoodLog?: boolean;
 }
 
-export const MacroSummary = ({ totals, isFoodLog = false }: MacroSummaryProps) => {
+export const MacroSummary = ({ totals }: MacroSummaryProps) => {
   const netCarbs = totals.carbs - totals.fiber;
 
   const macros = [
