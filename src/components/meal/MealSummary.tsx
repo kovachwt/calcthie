@@ -16,14 +16,14 @@ interface MealSummaryProps {
 export const MealSummary = ({ activeTab }: MealSummaryProps) => {
   const [showMicronutrients, setShowMicronutrients] = useState(false);
   const { items, getTotals } = useMealStore();
-  const { getSelectedDateTotals } = useConsumedMealsStore();
+  const { getSelectedDateFullTotals } = useConsumedMealsStore();
 
   // Use food log data when on consumed tab, otherwise use current meal
   const mealTotals = getTotals();
-  const foodLogTotals = getSelectedDateTotals();
+  const foodLogTotals = getSelectedDateFullTotals();
 
   const totals = activeTab === 'consumed'
-    ? { ...mealTotals, ...foodLogTotals, micronutrients: new Map() }
+    ? foodLogTotals
     : mealTotals;
 
   // Convert micronutrient Map to array for NutrientTable
@@ -36,7 +36,7 @@ export const MealSummary = ({ activeTab }: MealSummaryProps) => {
   const hasData = isFoodLog
     ? foodLogTotals.calories > 0
     : items.length > 0;
-  const dataLabel = isFoodLog ? 'Today\'s Food Log' : 'Current Meal';
+  const dataLabel = isFoodLog ? 'Food Log' : 'Current Meal';
 
   if (!hasData) {
     return (
@@ -84,8 +84,8 @@ export const MealSummary = ({ activeTab }: MealSummaryProps) => {
         </CardContent>
       </Card>
 
-      {/* Micronutrients (Expandable) - Only show for current meal */}
-      {!isFoodLog && micronutrients.length > 0 && (
+      {/* Micronutrients (Expandable) */}
+      {micronutrients.length > 0 && (
         <Card>
           <CardHeader>
             <button
@@ -108,25 +108,11 @@ export const MealSummary = ({ activeTab }: MealSummaryProps) => {
               <div className="max-h-96 overflow-y-auto">
                 <NutrientTable
                   nutrients={Array.from(totals.micronutrients.values())}
-                  title="Total Nutrition for Meal"
+                  title={isFoodLog ? "Total Nutrition for Selected Date" : "Total Nutrition for Meal"}
                 />
               </div>
             </CardContent>
           )}
-        </Card>
-      )}
-      {isFoodLog && (
-        <Card>
-          <CardContent className="py-8">
-            <div className="text-center text-gray-500">
-              <p className="text-sm">
-                Detailed micronutrient breakdown is only available for the Current Meal.
-              </p>
-              <p className="text-xs mt-1 text-gray-400">
-                Food Log shows macronutrient totals from consumed meals.
-              </p>
-            </div>
-          </CardContent>
         </Card>
       )}
     </div>

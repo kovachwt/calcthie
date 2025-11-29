@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { consumedMealApi, type ConsumedMeal } from '../api/consumedMealApi';
 import { useAuthStore } from './authStore';
 import type { MealItem, NutrientTotals } from '../types/meal';
+import { calculateMealTotals } from '../utils/nutrition';
 
 interface ConsumedMealsState {
   meals: ConsumedMeal[];
@@ -19,6 +20,7 @@ interface ConsumedMealsState {
     fat: number;
     fiber: number;
   };
+  getSelectedDateFullTotals: () => NutrientTotals;
 }
 
 export const useConsumedMealsStore = create<ConsumedMealsState>((set, get) => ({
@@ -117,5 +119,20 @@ export const useConsumedMealsStore = create<ConsumedMealsState>((set, get) => ({
       }),
       { calories: 0, protein: 0, carbs: 0, fat: 0, fiber: 0 }
     );
+  },
+
+  getSelectedDateFullTotals: () => {
+    const meals = get().meals;
+
+    // Combine all meal items from all consumed meals
+    const allItems: MealItem[] = [];
+    meals.forEach((meal) => {
+      if (Array.isArray(meal.mealData)) {
+        allItems.push(...meal.mealData);
+      }
+    });
+
+    // Calculate totals using the same function as current meal
+    return calculateMealTotals(allItems);
   },
 }));
