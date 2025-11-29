@@ -44,7 +44,7 @@ function parseJwt(token: string) {
 
 export const GoogleSignInButton = () => {
   const buttonRef = useRef<HTMLDivElement>(null);
-  const { setUser } = useAuthStore();
+  const { authenticateWithGoogle } = useAuthStore();
 
   useEffect(() => {
     // Load Google Identity Services script
@@ -61,23 +61,15 @@ export const GoogleSignInButton = () => {
           // IMPORTANT: Replace this with your actual Google OAuth Client ID
           // Get it from: https://console.cloud.google.com/
           client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID || 'YOUR_GOOGLE_CLIENT_ID',
-          callback: (response) => {
-            // Decode the JWT credential to get user info
-            const userInfo = parseJwt(response.credential);
-
-            // Set user in store with minimal info
-            setUser({
-              id: userInfo.sub, // Google user ID
-              email: userInfo.email,
-              name: userInfo.name,
-              picture: userInfo.picture,
-            });
-
-            console.log('User signed in:', {
-              id: userInfo.sub,
-              email: userInfo.email,
-              name: userInfo.name,
-            });
+          callback: async (response) => {
+            try {
+              // Send Google token to backend for verification and JWT exchange
+              await authenticateWithGoogle(response.credential);
+              console.log('User authenticated successfully');
+            } catch (error) {
+              console.error('Failed to authenticate:', error);
+              alert('Authentication failed. Please try again.');
+            }
           },
         });
 
@@ -95,7 +87,7 @@ export const GoogleSignInButton = () => {
       // Cleanup script on unmount
       document.body.removeChild(script);
     };
-  }, [setUser]);
+  }, [authenticateWithGoogle]);
 
   return <div ref={buttonRef}></div>;
 };

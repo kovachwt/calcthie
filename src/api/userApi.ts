@@ -22,9 +22,9 @@ export interface UpdateUserRequest {
 }
 
 export const userApi = {
-  // Get user by ID
-  getUser: async (userId: string): Promise<User> => {
-    const response = await apiClient.get<User>(`/user/${userId}`);
+  // Get current user (authenticated via JWT)
+  getUser: async (): Promise<User> => {
+    const response = await apiClient.get<User>('/user/me');
     return response.data;
   },
 
@@ -34,50 +34,50 @@ export const userApi = {
     return response.data;
   },
 
-  // Update user info
-  updateUser: async (userId: string, data: UpdateUserRequest): Promise<User> => {
-    const response = await apiClient.put<User>(`/user/${userId}`, data);
+  // Update user info (authenticated via JWT)
+  updateUser: async (data: UpdateUserRequest): Promise<User> => {
+    const response = await apiClient.put<User>('/user/me', data);
     return response.data;
   },
 
-  // Delete user
-  deleteUser: async (userId: string): Promise<void> => {
-    await apiClient.delete(`/user/${userId}`);
+  // Delete user (authenticated via JWT)
+  deleteUser: async (): Promise<void> => {
+    await apiClient.delete('/user/me');
   },
 
-  // Get user favorites
-  getFavorites: async (userId: string): Promise<number[]> => {
-    const response = await apiClient.get<number[]>(`/user/${userId}/favorites`);
+  // Get user favorites (authenticated via JWT)
+  getFavorites: async (): Promise<number[]> => {
+    const response = await apiClient.get<number[]>('/user/favorites');
     return response.data;
   },
 
-  // Update favorites (replace all)
-  updateFavorites: async (userId: string, favorites: number[]): Promise<number[]> => {
-    const response = await apiClient.put<number[]>(`/user/${userId}/favorites`, { favorites });
+  // Update favorites (replace all) (authenticated via JWT)
+  updateFavorites: async (favorites: number[]): Promise<number[]> => {
+    const response = await apiClient.put<number[]>('/user/favorites', { favorites });
     return response.data;
   },
 
-  // Add a single favorite
-  addFavorite: async (userId: string, fdcId: number): Promise<number[]> => {
-    const response = await apiClient.post<number[]>(`/user/${userId}/favorites/${fdcId}`);
+  // Add a single favorite (authenticated via JWT)
+  addFavorite: async (fdcId: number): Promise<number[]> => {
+    const response = await apiClient.post<number[]>(`/user/favorites/${fdcId}`);
     return response.data;
   },
 
-  // Remove a single favorite
-  removeFavorite: async (userId: string, fdcId: number): Promise<number[]> => {
-    const response = await apiClient.delete<number[]>(`/user/${userId}/favorites/${fdcId}`);
+  // Remove a single favorite (authenticated via JWT)
+  removeFavorite: async (fdcId: number): Promise<number[]> => {
+    const response = await apiClient.delete<number[]>(`/user/favorites/${fdcId}`);
     return response.data;
   },
 
-  // Get current meal
-  getCurrentMeal: async (userId: string): Promise<any> => {
-    const response = await apiClient.get<any>(`/user/${userId}/current-meal`);
+  // Get current meal (authenticated via JWT)
+  getCurrentMeal: async (): Promise<any> => {
+    const response = await apiClient.get<any>('/user/current-meal');
     return response.data;
   },
 
-  // Update current meal
-  updateCurrentMeal: async (userId: string, currentMeal: any): Promise<any> => {
-    const response = await apiClient.put<any>(`/user/${userId}/current-meal`, { currentMeal });
+  // Update current meal (authenticated via JWT)
+  updateCurrentMeal: async (currentMeal: any): Promise<any> => {
+    const response = await apiClient.put<any>('/user/current-meal', { currentMeal });
     return response.data;
   },
 };

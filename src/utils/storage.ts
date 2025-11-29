@@ -8,6 +8,7 @@ const STORAGE_KEYS = {
   HISTORY: 'calcthie_recent_foods',
   FAVORITES: 'calcthie_favorite_foods',
   USER: 'calcthie_user',
+  AUTH: 'calcthie_auth', // New: stores user + JWT token
 } as const;
 
 export function saveToLocalStorage<T>(key: string, value: T): void {
@@ -65,5 +66,10 @@ export const storage = {
     save: (value: unknown) => saveToLocalStorage(STORAGE_KEYS.USER, value),
     load: <T>(defaultValue: T) => loadFromLocalStorage(STORAGE_KEYS.USER, defaultValue),
     clear: () => removeFromLocalStorage(STORAGE_KEYS.USER),
+  },
+  auth: {
+    save: (value: unknown) => saveToLocalStorage(STORAGE_KEYS.AUTH, value),
+    load: <T>(defaultValue: T) => loadFromLocalStorage(STORAGE_KEYS.AUTH, defaultValue),
+    clear: () => removeFromLocalStorage(STORAGE_KEYS.AUTH),
   },
 };

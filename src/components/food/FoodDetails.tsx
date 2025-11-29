@@ -46,6 +46,18 @@ export const FoodDetails = ({ fdcId, isOpen, onClose, onAddToMeal }: FoodDetails
     );
   };
 
+  const getNetCarbs = () => {
+    if (!food) return null;
+    const carbs = food.nutrients.find((n) => n.nutrientId === MACRO_NUTRIENT_IDS.CARBS);
+    const fiber = food.nutrients.find((n) => n.nutrientId === MACRO_NUTRIENT_IDS.FIBER);
+
+    if (carbs?.amount !== undefined && carbs.amount !== null) {
+      const fiberAmount = fiber?.amount || 0;
+      return Math.max(0, carbs.amount - fiberAmount);
+    }
+    return null;
+  };
+
   const getMicroNutrients = () => {
     if (!food) return [];
     return food.nutrients
@@ -128,6 +140,15 @@ export const FoodDetails = ({ fdcId, isOpen, onClose, onAddToMeal }: FoodDetails
                   <p className="text-sm text-gray-600">{nutrient.unit}</p>
                 </div>
               ))}
+              {getNetCarbs() !== null && (
+                <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4">
+                  <p className="text-sm text-gray-600">Net Carbs</p>
+                  <p className="text-2xl font-bold text-gray-900 mt-1">
+                    {getNetCarbs()!.toFixed(1)}
+                  </p>
+                  <p className="text-sm text-gray-600">g</p>
+                </div>
+              )}
             </div>
           </div>
 

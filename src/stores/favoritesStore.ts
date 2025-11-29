@@ -25,7 +25,7 @@ export const useFavoritesStore = create<FavoritesState>((set, get) => ({
       // Sync with backend if user is logged in
       const user = useAuthStore.getState().user;
       if (user) {
-        userApi.addFavorite(user.id, fdcId).catch((error) => {
+        userApi.addFavorite(fdcId).catch((error) => {
           console.error('[Favorites] Failed to sync add with backend:', error);
         });
       }
@@ -42,7 +42,7 @@ export const useFavoritesStore = create<FavoritesState>((set, get) => ({
       // Sync with backend if user is logged in
       const user = useAuthStore.getState().user;
       if (user) {
-        userApi.removeFavorite(user.id, fdcId).catch((error) => {
+        userApi.removeFavorite(fdcId).catch((error) => {
           console.error('[Favorites] Failed to sync remove with backend:', error);
         });
       }
@@ -75,7 +75,7 @@ export const useFavoritesStore = create<FavoritesState>((set, get) => ({
 
     try {
       // Get favorites from backend
-      const backendFavorites = await userApi.getFavorites(user.id);
+      const backendFavorites = await userApi.getFavorites();
 
       // Merge with local favorites
       const localFavorites = get().favorites;
@@ -86,7 +86,7 @@ export const useFavoritesStore = create<FavoritesState>((set, get) => ({
       set({ favorites: mergedFavorites });
 
       if (mergedFavorites.length !== backendFavorites.length) {
-        await userApi.updateFavorites(user.id, mergedFavorites);
+        await userApi.updateFavorites(mergedFavorites);
       }
 
       console.log('[Favorites] Synced with backend');

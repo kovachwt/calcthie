@@ -45,7 +45,7 @@ export const useMealStore = create<MealState>((set, get) => ({
       // Sync with backend if user is logged in
       const user = useAuthStore.getState().user;
       if (user) {
-        userApi.updateCurrentMeal(user.id, newItems).catch((error) => {
+        userApi.updateCurrentMeal(newItems).catch((error) => {
           console.error('[Meal] Failed to sync add with backend:', error);
         });
       }
@@ -62,7 +62,7 @@ export const useMealStore = create<MealState>((set, get) => ({
       // Sync with backend if user is logged in
       const user = useAuthStore.getState().user;
       if (user) {
-        userApi.updateCurrentMeal(user.id, newItems).catch((error) => {
+        userApi.updateCurrentMeal(newItems).catch((error) => {
           console.error('[Meal] Failed to sync remove with backend:', error);
         });
       }
@@ -87,7 +87,7 @@ export const useMealStore = create<MealState>((set, get) => ({
       // Sync with backend if user is logged in
       const user = useAuthStore.getState().user;
       if (user) {
-        userApi.updateCurrentMeal(user.id, newItems).catch((error) => {
+        userApi.updateCurrentMeal(newItems).catch((error) => {
           console.error('[Meal] Failed to sync update with backend:', error);
         });
       }
@@ -103,7 +103,7 @@ export const useMealStore = create<MealState>((set, get) => ({
     // Sync with backend if user is logged in
     const user = useAuthStore.getState().user;
     if (user) {
-      userApi.updateCurrentMeal(user.id, []).catch((error) => {
+      userApi.updateCurrentMeal([]).catch((error) => {
         console.error('[Meal] Failed to sync clear with backend:', error);
       });
     }
@@ -116,7 +116,7 @@ export const useMealStore = create<MealState>((set, get) => ({
     // Sync with backend if user is logged in
     const user = useAuthStore.getState().user;
     if (user) {
-      userApi.updateCurrentMeal(user.id, items).catch((error) => {
+      userApi.updateCurrentMeal(items).catch((error) => {
         console.error('[Meal] Failed to sync loaded meal with backend:', error);
       });
     }
@@ -137,7 +137,7 @@ export const useMealStore = create<MealState>((set, get) => ({
 
     try {
       // Get current meal from backend
-      const backendMeal = await userApi.getCurrentMeal(user.id);
+      const backendMeal = await userApi.getCurrentMeal();
 
       // For now, prioritize local state (since backend meal might be from another device)
       // In the future, could implement more sophisticated merging logic
@@ -145,7 +145,7 @@ export const useMealStore = create<MealState>((set, get) => ({
 
       if (localItems.length > 0) {
         // Push local meal to backend
-        await userApi.updateCurrentMeal(user.id, localItems);
+        await userApi.updateCurrentMeal(localItems);
         console.log('[Meal] Pushed local meal to backend');
       } else if (backendMeal && Array.isArray(backendMeal) && backendMeal.length > 0) {
         // Pull backend meal to local
