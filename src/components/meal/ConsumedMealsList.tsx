@@ -10,7 +10,7 @@ import type { MealItem } from '../../types/meal';
 
 export const ConsumedMealsList = () => {
   const { user } = useAuthStore();
-  const { meals, selectedDate, isLoading, setSelectedDate, loadMealsForDate, deleteMeal, getTodaysTotals } =
+  const { meals, selectedDate, isLoading, setSelectedDate, loadMealsForDate, deleteMeal, getSelectedDateTotals } =
     useConsumedMealsStore();
   const { loadMeal } = useMealStore();
   const [selectedMealForDetails, setSelectedMealForDetails] = useState<ConsumedMeal | null>(null);
@@ -83,7 +83,7 @@ export const ConsumedMealsList = () => {
     );
   }
 
-  const totals = getTodaysTotals();
+  const totals = getSelectedDateTotals();
 
   return (
     <div className="space-y-4">
