@@ -4,6 +4,7 @@ import type { NutrientTotals } from '../../types/meal';
 
 interface MacroBreakdownProps {
   totals: NutrientTotals;
+  isFoodLog?: boolean;
 }
 
 const COLORS = {
@@ -12,13 +13,15 @@ const COLORS = {
   fat: '#f97316', // Orange
 };
 
-export const MacroBreakdown = ({ totals }: MacroBreakdownProps) => {
+export const MacroBreakdown = ({ totals, isFoodLog = false }: MacroBreakdownProps) => {
   const percentages = getMacroPercentages(totals);
-  const netCarbs = totals.carbs - totals.fiber;
+  // Use net carbs for current meal, total carbs for food log (since we don't have fiber data)
+  const carbGrams = isFoodLog ? totals.carbs : totals.carbs - totals.fiber;
+  const carbLabel = isFoodLog ? 'Carbs' : 'Net Carbs';
 
   const data = [
     { name: 'Protein', value: percentages.protein, grams: totals.protein, calories: percentages.proteinCal },
-    { name: 'Carbs', value: percentages.carbs, grams: netCarbs, calories: percentages.carbsCal },
+    { name: carbLabel, value: percentages.carbs, grams: carbGrams, calories: percentages.carbsCal },
     { name: 'Fat', value: percentages.fat, grams: totals.fat, calories: percentages.fatCal },
   ].filter((item) => item.value > 0);
 
@@ -47,12 +50,15 @@ export const MacroBreakdown = ({ totals }: MacroBreakdownProps) => {
             fill="#8884d8"
             dataKey="value"
           >
-            {data.map((entry) => (
-              <Cell
-                key={entry.name}
-                fill={COLORS[entry.name.toLowerCase() as keyof typeof COLORS]}
-              />
-            ))}
+            {data.map((entry) => {
+              const colorKey = entry.name.toLowerCase().includes('carb') ? 'carbs' : entry.name.toLowerCase();
+              return (
+                <Cell
+                  key={entry.name}
+                  fill={COLORS[colorKey as keyof typeof COLORS]}
+                />
+              );
+            })}
           </Pie>
           <Tooltip
             formatter={(value: number, name: string, props: any) => [
@@ -65,19 +71,22 @@ export const MacroBreakdown = ({ totals }: MacroBreakdownProps) => {
 
       {/* Macro Stats */}
       <div className="grid grid-cols-3 gap-3">
-        {data.map((item) => (
-          <div
-            key={item.name}
-            className="text-center p-3 rounded-lg"
-            style={{
-              backgroundColor: `${COLORS[item.name.toLowerCase() as keyof typeof COLORS]}15`,
-            }}
-          >
-            <p className="text-sm text-gray-600">{item.name}</p>
-            <p className="text-xl font-bold text-gray-900">{item.calories} kcal</p>
-            <p className="text-xs text-gray-500">{item.grams.toFixed(1)}g • {item.value}%</p>
-          </div>
-        ))}
+        {data.map((item) => {
+          const colorKey = item.name.toLowerCase().includes('carb') ? 'carbs' : item.name.toLowerCase();
+          return (
+            <div
+              key={item.name}
+              className="text-center p-3 rounded-lg"
+              style={{
+                backgroundColor: `${COLORS[colorKey as keyof typeof COLORS]}15`,
+              }}
+            >
+              <p className="text-sm text-gray-600">{item.name}</p>
+              <p className="text-xl font-bold text-gray-900">{item.calories} kcal</p>
+              <p className="text-xs text-gray-500">{item.grams.toFixed(1)}g • {item.value}%</p>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

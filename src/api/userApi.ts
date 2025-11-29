@@ -36,13 +36,13 @@ export const userApi = {
 
   // Update user info (authenticated via JWT)
   updateUser: async (data: UpdateUserRequest): Promise<User> => {
-    const response = await apiClient.put<User>('/user/me', data);
+    const response = await apiClient.put<User>('/user', data);
     return response.data;
   },
 
   // Delete user (authenticated via JWT)
   deleteUser: async (): Promise<void> => {
-    await apiClient.delete('/user/me');
+    await apiClient.delete('/user');
   },
 
   // Get user favorites (authenticated via JWT)

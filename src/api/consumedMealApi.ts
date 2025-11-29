@@ -24,16 +24,16 @@ export interface CreateConsumedMealRequest {
 }
 
 export const consumedMealApi = {
-  // Get all meals for a user
-  getUserMeals: async (userId: string): Promise<ConsumedMeal[]> => {
-    const response = await apiClient.get<ConsumedMeal[]>(`/consumedmeal/user/${userId}`);
+  // Get all meals for a user (uses JWT authentication)
+  getUserMeals: async (): Promise<ConsumedMeal[]> => {
+    const response = await apiClient.get<ConsumedMeal[]>('/consumedmeal');
     return response.data;
   },
 
-  // Get meals for a specific date
-  getUserMealsByDate: async (userId: string, date: Date): Promise<ConsumedMeal[]> => {
+  // Get meals for a specific date (uses JWT authentication)
+  getUserMealsByDate: async (date: Date): Promise<ConsumedMeal[]> => {
     const dateStr = date.toISOString().split('T')[0];
-    const response = await apiClient.get<ConsumedMeal[]>(`/consumedmeal/user/${userId}/date/${dateStr}`);
+    const response = await apiClient.get<ConsumedMeal[]>(`/consumedmeal/date/${dateStr}`);
     return response.data;
   },
 
@@ -43,9 +43,9 @@ export const consumedMealApi = {
     return response.data;
   },
 
-  // Create consumed meal
-  createConsumedMeal: async (userId: string, data: CreateConsumedMealRequest): Promise<ConsumedMeal> => {
-    const response = await apiClient.post<ConsumedMeal>(`/consumedmeal/user/${userId}`, data);
+  // Create consumed meal (uses JWT authentication)
+  createConsumedMeal: async (data: CreateConsumedMealRequest): Promise<ConsumedMeal> => {
+    const response = await apiClient.post<ConsumedMeal>('/consumedmeal', data);
     return response.data;
   },
 

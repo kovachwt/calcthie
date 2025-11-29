@@ -19,7 +19,8 @@ export const ConsumedMealsList = () => {
     if (user) {
       loadMealsForDate(selectedDate);
     }
-  }, [user, selectedDate, loadMealsForDate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, selectedDate]);
 
   const goToPreviousDay = () => {
     const newDate = new Date(selectedDate);

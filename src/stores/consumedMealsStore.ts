@@ -7,11 +7,12 @@ interface ConsumedMealsState {
   meals: ConsumedMeal[];
   selectedDate: Date;
   isLoading: boolean;
+  initialize: () => Promise<void>;
   setSelectedDate: (date: Date) => void;
   loadMealsForDate: (date: Date) => Promise<void>;
   saveMeal: (mealName: string, items: MealItem[], totals: NutrientTotals) => Promise<void>;
   deleteMeal: (id: number) => Promise<void>;
-  getTodaysTotals: () => {
+  getSelectedDateTotals: () => {
     calories: number;
     protein: number;
     carbs: number;
@@ -23,6 +24,13 @@ export const useConsumedMealsStore = create<ConsumedMealsState>((set, get) => ({
   meals: [],
   selectedDate: new Date(),
   isLoading: false,
+
+  initialize: async () => {
+    const user = useAuthStore.getState().user;
+    if (user) {
+      await get().loadMealsForDate(new Date());
+    }
+  },
 
   setSelectedDate: (date) => {
     set({ selectedDate: date });
@@ -38,7 +46,7 @@ export const useConsumedMealsStore = create<ConsumedMealsState>((set, get) => ({
 
     set({ isLoading: true });
     try {
-      const meals = await consumedMealApi.getUserMealsByDate(user.id, date);
+      const meals = await consumedMealApi.getUserMealsByDate(date);
       set({ meals });
     } catch (error) {
       console.error('[ConsumedMeals] Failed to load meals:', error);
@@ -64,7 +72,7 @@ export const useConsumedMealsStore = create<ConsumedMealsState>((set, get) => ({
       consumedDate.setMinutes(new Date().getMinutes());
       consumedDate.setSeconds(new Date().getSeconds());
 
-      const meal = await consumedMealApi.createConsumedMeal(user.id, {
+      const meal = await consumedMealApi.createConsumedMeal({
         mealName,
         mealData: items,
         totalCalories: totals.calories,
@@ -95,19 +103,7 @@ export const useConsumedMealsStore = create<ConsumedMealsState>((set, get) => ({
     }
   },
 
-  getTodaysTotals: () => {
-    const today = new Date();
-    const selectedDate = get().selectedDate;
-
-    // Only calculate totals if we're looking at today
-    if (
-      today.getDate() !== selectedDate.getDate() ||
-      today.getMonth() !== selectedDate.getMonth() ||
-      today.getFullYear() !== selectedDate.getFullYear()
-    ) {
-      return { calories: 0, protein: 0, carbs: 0, fat: 0 };
-    }
-
+  getSelectedDateTotals: () => {
     const meals = get().meals;
     return meals.reduce(
       (acc, meal) => ({

@@ -11,12 +11,18 @@ import { useDebounce } from '../../hooks/useDebounce';
 
 interface FoodSearchProps {
   onSelectFood: (fdcId: number) => void;
+  onTabChange?: (tab: TabType) => void;
 }
 
-type TabType = 'search' | 'favorites' | 'consumed';
+export type TabType = 'search' | 'favorites' | 'consumed';
 
-export const FoodSearch = ({ onSelectFood }: FoodSearchProps) => {
+export const FoodSearch = ({ onSelectFood, onTabChange }: FoodSearchProps) => {
   const [activeTab, setActiveTab] = useState<TabType>('search');
+
+  const handleTabChange = (tab: TabType) => {
+    setActiveTab(tab);
+    onTabChange?.(tab);
+  };
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDataTypes, setSelectedDataTypes] = useState<string[]>(
     FOOD_TYPES.map((t) => t.value)
@@ -34,7 +40,7 @@ export const FoodSearch = ({ onSelectFood }: FoodSearchProps) => {
       {/* Tabs */}
       <div className="flex border-b border-gray-200">
         <button
-          onClick={() => setActiveTab('search')}
+          onClick={() => handleTabChange('search')}
           className={`flex items-center gap-2 px-4 py-2 font-medium transition-colors ${
             activeTab === 'search'
               ? 'text-primary-600 border-b-2 border-primary-600'
@@ -45,7 +51,7 @@ export const FoodSearch = ({ onSelectFood }: FoodSearchProps) => {
           Search
         </button>
         <button
-          onClick={() => setActiveTab('favorites')}
+          onClick={() => handleTabChange('favorites')}
           className={`flex items-center gap-2 px-4 py-2 font-medium transition-colors ${
             activeTab === 'favorites'
               ? 'text-primary-600 border-b-2 border-primary-600'
@@ -56,7 +62,7 @@ export const FoodSearch = ({ onSelectFood }: FoodSearchProps) => {
           Favorites
         </button>
         <button
-          onClick={() => setActiveTab('consumed')}
+          onClick={() => handleTabChange('consumed')}
           className={`flex items-center gap-2 px-4 py-2 font-medium transition-colors ${
             activeTab === 'consumed'
               ? 'text-primary-600 border-b-2 border-primary-600'

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { FoodSearch } from './components/food/FoodSearch';
+import { FoodSearch, type TabType } from './components/food/FoodSearch';
 import { FoodDetails } from './components/food/FoodDetails';
 import { AddFoodModal } from './components/meal/AddFoodModal';
 import { EditMealItemModal } from './components/meal/EditMealItemModal';
@@ -13,6 +13,7 @@ import { useGoalsStore } from './stores/goalsStore';
 import { useHistoryStore } from './stores/historyStore';
 import { useFavoritesStore } from './stores/favoritesStore';
 import { useAuthStore } from './stores/authStore';
+import { useConsumedMealsStore } from './stores/consumedMealsStore';
 import { useSharedMeal } from './hooks/useSharedMeal';
 import type { FoodDetail, PortionInfo } from './types/food';
 
@@ -27,6 +28,7 @@ function App() {
   const { loadFromStorage: loadFavorites, syncWithBackend: syncFavorites } = useFavoritesStore();
   const { addItem } = useMealStore();
   const { user, initializeAuth } = useAuthStore();
+  const { initialize: initializeConsumedMeals } = useConsumedMealsStore();
 
   useEffect(() => {
     // Initialize auth first
@@ -44,13 +46,15 @@ function App() {
     if (user) {
       syncMeal();
       syncFavorites();
+      initializeConsumedMeals();
     }
-  }, [user, syncMeal, syncFavorites]);
+  }, [user, syncMeal, syncFavorites, initializeConsumedMeals]);
 
   // Modal states
   const [selectedFoodId, setSelectedFoodId] = useState<number | null>(null);
   const [foodToAdd, setFoodToAdd] = useState<FoodDetail | null>(null);
   const [editingItemId, setEditingItemId] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<TabType>('search');
 
   const handleFoodSelect = (fdcId: number) => {
     setSelectedFoodId(fdcId);
@@ -126,7 +130,7 @@ function App() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           {/* Left Column - Food Search */}
           <div className="lg:col-span-2">
-            <FoodSearch onSelectFood={handleFoodSelect} />
+            <FoodSearch onSelectFood={handleFoodSelect} onTabChange={setActiveTab} />
           </div>
 
           {/* Right Column - Meal Cart */}
@@ -137,7 +141,7 @@ function App() {
 
         {/* Meal Summary */}
         <div className="mt-8">
-          <MealSummary />
+          <MealSummary activeTab={activeTab} />
         </div>
       </main>
 
