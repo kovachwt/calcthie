@@ -17,6 +17,7 @@ interface ConsumedMealsState {
     protein: number;
     carbs: number;
     fat: number;
+    fiber: number;
   };
 }
 
@@ -79,6 +80,7 @@ export const useConsumedMealsStore = create<ConsumedMealsState>((set, get) => ({
         totalProtein: totals.protein,
         totalCarbs: totals.carbs,
         totalFat: totals.fat,
+        totalFiber: totals.fiber,
         consumedAt: consumedDate.toISOString(),
       });
 
@@ -111,8 +113,9 @@ export const useConsumedMealsStore = create<ConsumedMealsState>((set, get) => ({
         protein: acc.protein + (meal.totalProtein || 0),
         carbs: acc.carbs + (meal.totalCarbs || 0),
         fat: acc.fat + (meal.totalFat || 0),
+        fiber: acc.fiber + (meal.totalFiber || 0),
       }),
-      { calories: 0, protein: 0, carbs: 0, fat: 0 }
+      { calories: 0, protein: 0, carbs: 0, fat: 0, fiber: 0 }
     );
   },
 }));

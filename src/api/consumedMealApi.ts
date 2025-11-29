@@ -9,6 +9,7 @@ export interface ConsumedMeal {
   totalProtein: number | null;
   totalCarbs: number | null;
   totalFat: number | null;
+  totalFiber: number | null;
   consumedAt: string;
   createdAt: string;
 }
@@ -20,6 +21,7 @@ export interface CreateConsumedMealRequest {
   totalProtein?: number;
   totalCarbs?: number;
   totalFat?: number;
+  totalFiber?: number;
   consumedAt?: string;
 }
 

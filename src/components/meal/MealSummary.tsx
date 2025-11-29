@@ -23,7 +23,7 @@ export const MealSummary = ({ activeTab }: MealSummaryProps) => {
   const foodLogTotals = getSelectedDateTotals();
 
   const totals = activeTab === 'consumed'
-    ? { ...mealTotals, ...foodLogTotals, fiber: 0, micronutrients: new Map() }
+    ? { ...mealTotals, ...foodLogTotals, micronutrients: new Map() }
     : mealTotals;
 
   // Convert micronutrient Map to array for NutrientTable
