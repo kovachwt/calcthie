@@ -104,7 +104,7 @@ function App() {
               <Logo size="md" />
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">Calcthie</h1>
-                <p className="text-sm text-gray-600">Nutrition Calculator & Tracker</p>
+                <p className="text-sm text-gray-600">Nutrition Calculator</p>
               </div>
             </div>
             <UserMenu />
